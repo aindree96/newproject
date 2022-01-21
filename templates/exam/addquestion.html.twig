@@ -1,0 +1,61 @@
+{% extends ('base.html.twig') %}
+{% block title %}Add question{% endblock %}
+{% block body %}
+    <h2 align="center" class="mt-5">Add Questions</h2>
+    <div class="container">
+        {% for type, messages in app.session.flashbag.all() %}
+            {% for message in messages %}
+                {% if type == 'error' %}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% elseif type == 'success' %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div class="container">
+        <div class="card">
+            <form action="{{ path('app_question_add_database') }}" method="post">
+                <div class=" p-5">
+
+                    <div class="form-group">
+                        <label for="addquestion"><strong> Enter Question </strong></label>
+
+                        <textarea class="form-control" name="addquestion" cols="60" rows="2" id="addquestion"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="wronganswer1"><strong>Enter Wrong  Answer1 </strong></label>
+
+                        <input  class="form-control"  name="wronganswer1" type="text" id="wronganswer1" size="85" maxlength="85">
+                    </div>
+                    <div class="form-group">
+                        <label for="wronganswer2"><strong>Enter Wrong Answer2 </strong></label>
+
+                        <input  class="form-control"  name="wronganswer2" type="text" id="wronganswer2" size="85" maxlength="85">
+                    </div>
+                    <div class="form-group">
+                        <label for="wronganswer3"><strong>Enter Wrong Answer3 </strong></label>
+
+                        <input  class="form-control"  name="wronganswer3" type="text" id="wronganswer3" size="85" maxlength="85">
+                    </div>
+                    <div class="form-group">
+                        <label for="wronganswer4"> <strong>Enter Wrong Answer4</strong></label>
+
+                        <input  class="form-control"   name="wronganswer4" type="text" id="wronganswer4" size="85" maxlength="85">
+                    </div>
+                    <div class="form-group">
+                        <label for="correctanswer"><strong>Enter Correct Answer </strong></label>
+
+                        <input  class="form-control"   name="correctanswer" type="text" id="correctanswer" size="50" maxlength="50">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}
