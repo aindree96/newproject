@@ -97,5 +97,43 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_show_question');
     }
 
+  
+     /**
+     * @Route ("/edit/{id}",name="app_question_edit")
+     */
+
+    public function edit($id,EntityManagerInterface $entityManager){
+        $question=$entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
+        return $this->render('exam/edit.html.twig',[
+            'question'=>$question
+        ]);
+
+    }
+
+     /**
+     * @Route("new/question/updated/{id}",name="app_question_update_database",methods="POST")
+     */
+
+    public function updateQuestionsToDatabase($id,EntityManagerInterface $entityManager,Request $request){
+        $questionname=$request->get('addquestion');
+        $wronganswer1=$request->get('wronganswer1');
+        $wronganswer2=$request->get('wronganswer2');
+        $wronganswer3=$request->get('wronganswer3');
+        $wronganswer4=$request->get('wronganswer4');
+        $correct=$request->get('correctanswer');
+
+        $question=$entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
+        $question->setQuestion($questionname);
+        $question->setWrong1($wronganswer1);
+        $question->setWrong2($wronganswer2);
+        $question->setWrong3($wronganswer3);
+        $question->setWrong4($wronganswer4);
+        $question->setAnswer($correct);
+      
+        $entityManager->flush();
+        $this->addFlash('success',"Question is updated successfully");
+        return $this->redirectToRoute('app_show_question');
+        
+    }
 
 }

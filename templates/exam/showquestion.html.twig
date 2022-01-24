@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}Show Questions{% endblock %}
  {% block body %}
-
-
      <h2 align="center" class="pt-5">Questions</h2>
      {% for message in app.flashes('success') %}
          <div class="alert alert-success">
@@ -27,22 +25,19 @@
                  <td colspan="8"><div class="d-inline p-2 bg-dark text-white center">No questions to show!!</div></td>
              </tr>
          {% else %}
-             {% for questions in question %}
-                 <tr>
-                     <td>{{questions.id}}</td>
-                     <td>{{questions.question}}</td>
-                     <td>{{questions.wrong1}}</td>
-                     <td>{{questions.wrong2}}</td>
-                     <td>{{questions.wrong3}}</td>
-                     <td>{{questions.wrong4}}</td>
-                     <td>{{questions.answer}}</td>
-                     <td><a href="">Edit/</a>
-                         <a href="{{ path('app_question_delete',{id:questions.id}) }}">Delete</a>
-                     </td>
-                 </tr>
-
-             {% endfor %}
-         {% endif %}
+         {% for questions in question %}
+            <tr>
+                <td>{{questions.id}}</td>
+                <td>{{questions.question}}</td>
+                <td>{{questions.wrong1}}</td>
+                <td>{{questions.wrong2}}</td>
+                <td>{{questions.wrong3}}</td>
+                <td>{{questions.wrong4}}</td>
+                <td>{{questions.answer}}</td>
+                <td><a href="{{ path('app_question_edit',{id:questions.id}) }}">Edit/</a>
+                    <a href="{{ path('app_question_delete',{id:questions.id}) }}">Delete</a> </td> 
+            </tr>
+        {% endfor %}
+        {% endif %}
      </table>
-
  {% endblock %}
