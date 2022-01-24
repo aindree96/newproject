@@ -1,51 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-       
-        {% block stylesheets %}
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spartan&display=swap">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
-           <link rel="stylesheet" href="/css/app.css">
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
 
-        {% block javascripts %}
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-              <div class="container-fluid">
+    {% block stylesheets %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spartan&display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+        <link rel="stylesheet" href="/css/app.css">
+    {% endblock %}
+
+    {% block javascripts %}
+        <nav
+                {{ is_granted('ROLE_PREVIOUS_ADMIN')?'style="background-color:yellow!important"'}}
+                class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{{path('homepage') }}">Home</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                      {% if is_granted('ROLE_ADMIN')%}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('admin') }}">Admin</a>
-                        </li>
-                         {% endif %}
-                          {% if is_granted('ROLE_STUDENT')%}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('newexam') }}">Student</a>
-                        </li>
+                        {% if is_granted('ROLE_ADMIN')%}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('admin') }}">Admin</a>
+                            </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_STUDENT')%}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('newexam') }}">Student</a>
+                            </li>
                         {% endif %}
                     </ul>
-                    </div>
-                       {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
-                        <a class="nav-link text-black-50" href="{{path('app_logout')}}">Log Out</a>
-                           {% else %}
+                </div>
+                {% if is_granted('ROLE_PREVIOUS_ADMIN')%}
+                    <a class="nav-link text-black-50" href="{{path('homepage',{'_switch_user':'_exit'})}}">Exit Impersonation</a>
+                {% endif %}
 
-                     <a class="nav-link text-black-50" href="{{path('app_login')}}">Login</a>
+
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+                    <a class="nav-link text-black-50" href="{{path('app_logout')}}">Log Out</a>
+                {% else %}
+
+                    <a class="nav-link text-black-50" href="{{path('app_login')}}">Login</a>
 
                     <a href="{{ path('app_register')}}" class="btn btn-dark">Sign up</a>
-                       {% endif %}
-                </div>
-            </nav>
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+                {% endif %}
+            </div>
+        </nav>
+    {% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
 </html>
