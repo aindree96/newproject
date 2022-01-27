@@ -15,7 +15,6 @@
              <th>Wrong Answer 1</th>
              <th>Wrong Answer 2</th>
              <th>Wrong Answer 3</th>
-             <th>Wrong Answer 4</th>
              <th>Correct_Answer</th>
              <th>Action</th>
          </tr>
@@ -27,15 +26,17 @@
          {% else %}
          {% for question in questions %}
             <tr>
-                <td>{{questions.id}}</td>
-                <td>{{questions.question}}</td>
-                <td>{{questions.wrong1}}</td>
-                <td>{{questions.wrong2}}</td>
-                <td>{{questions.wrong3}}</td>
-                <td>{{questions.wrong4}}</td>
-                <td>{{questions.answer}}</td>
-                <td><a href="{{ path('app_question_edit',{id:questions.id}) }}">Edit/</a>
-                    <a href="{{ path('app_question_delete',{id:questions.id}) }}">Delete</a> </td> 
+                <td>{{question.id}}</td>
+                <td>{{question.question}}</td>
+             
+                {% for answer in answers %}
+                {% if question.id == answer.question.id %}
+                <td>{{ answer.answer }}</td>
+                {% endif %}
+                {% endfor %}
+
+                 <td><a href="{{ path('app_question_edit',{id:question.id}) }}">Edit/</a>
+                    <a href="{{ path('app_question_delete',{id:question.id}) }}">Delete</a> </td> 
             </tr>
         {% endfor %}
         {% endif %}
