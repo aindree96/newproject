@@ -20,12 +20,12 @@
              <th>Action</th>
          </tr>
          </thead>
-         {% if question is empty %}
+         {% if questions is empty %}
              <tr>
                  <td colspan="8"><div class="d-inline p-2 bg-dark text-white center">No questions to show!!</div></td>
              </tr>
          {% else %}
-         {% for questions in question %}
+         {% for question in questions %}
             <tr>
                 <td>{{questions.id}}</td>
                 <td>{{questions.question}}</td>
