@@ -6,16 +6,16 @@
             <h1 >Exam</h1>
         </div>
         <form action="{{ path('app_exam_process') }}" method="post">
-            {% for question in question %}
+            {% for question in questions %}
                 <div class="row col-12 ">
                     <ul class="list-unstyled">
                         <li>{{ question.id }}.<b>{{ question.question }}</b></li>
-
-                        <ul class="list-unstyled">
-                            <li>A.<input type="radio" name="ques[{{ question.id }}]" value="{{ question.wrong1 }}">{{ question.wrong1 }}</li>
-                            <li>B.<input type="radio" name="ques[{{ question.id }}]" value="{{ question.wrong2 }}">{{ question.wrong2 }}</li>
-                            <li>C.<input type="radio" name="ques[{{ question.id }}]" value="{{ question.wrong3 }}">{{ question.wrong3 }}</li>
-                            <li>D.<input type="radio" name="ques[{{ question.id }}]" value="{{ question.wrong4 }}">{{ question.wrong4 }}</li>
+                         <ul class="list-unstyled">
+                         {% for answer in answers %}
+                         {% if question.id == answer.question.id %}
+                            <li><input type="radio" name="ques[{{ question.id }}]" value="{{ answer.id }}">{{ answer.answer }}</li>
+                        {% endif %}
+                        {% endfor %}                            
                         </ul>
                     </ul>
                 </div>

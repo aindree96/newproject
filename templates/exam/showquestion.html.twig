@@ -24,21 +24,19 @@
                  <td colspan="8"><div class="d-inline p-2 bg-dark text-white center">No questions to show!!</div></td>
              </tr>
          {% else %}
-         {% for question in questions %}
-            <tr>
-                <td>{{question.id}}</td>
-                <td>{{question.question}}</td>
-             
-                {% for answer in answers %}
-                {% if question.id == answer.question.id %}
-                <td>{{ answer.answer }}</td>
-                {% endif %}
-                {% endfor %}
-
-                 <td><a href="{{ path('app_question_edit',{id:question.id}) }}">Edit/</a>
-                    <a href="{{ path('app_question_delete',{id:question.id}) }}">Delete</a> </td> 
-            </tr>
-        {% endfor %}
-        {% endif %}
+             {% for question in questions %}
+                 <tr>
+                     <td>{{question.id}}</td>
+                     <td>{{question.question}}</td>
+                     {% for answer in answers %}
+                         {% if question.id == answer.question.id %}
+                             <td>{{ answer.answer }}</td>
+                         {% endif %}
+                     {% endfor %}
+                     <td><a href="{{ path('app_question_edit',{id:question.id}) }}">Edit/</a>
+                         <a href="{{ path('app_question_delete',{id:question.id}) }}">Delete</a> </td>
+                 </tr>
+             {% endfor %}
+         {% endif %}
      </table>
  {% endblock %}

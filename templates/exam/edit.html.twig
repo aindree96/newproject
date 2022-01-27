@@ -11,9 +11,10 @@
                         <label for="addquestion"><strong> Enter Question </strong></label>
                         <textarea class="form-control" name="addquestion" cols="60" rows="2" id="addquestion" >{{question.question}}</textarea>
                     </div>
+                
                     <div class="form-group">
                         <label for="wronganswer1"><strong>Enter Wrong  Answer1 </strong></label>
-                        <input  class="form-control"  name="wronganswer1" type="text" id="wronganswer1" size="85" maxlength="85"  value={{question.wrong1}}>
+                        <input  class="form-control"  name="wronganswer1" type="text" id="wronganswer1" size="85" maxlength="85"  value={{question.correctanswer.id.answer}}>
                     </div>
                     <div class="form-group">
                         <label for="wronganswer2"><strong>Enter Wrong Answer2 </strong></label>

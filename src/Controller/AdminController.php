@@ -16,33 +16,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/admin" , name="admin")
      * @IsGranted("ROLE_ADMIN")
      */
 
+    #[Route('/admin',name: 'admin')]
     public function admin()
     {
         return $this->render('admin/adminhome.html.twig');
-
-    }
-
-     /**
-     * @Route("new/question" , name="app_question")
-     * @IsGranted("ROLE_ADMIN")
-     */
-
-    public function addQuestion(){
-
-        return $this->render('exam/addquestion.html.twig');
-
     }
 
     /**
-     * @Route("new/question/added",name="app_question_add_database",methods="POST")
+     * @IsGranted("ROLE_ADMIN")
      */
 
+    #[Route('/new/question',name: 'app_question')]
+    public function addQuestion(){
+        return $this->render('exam/addquestion.html.twig');
+    }
+
+    #[Route('new/question/added',name: 'app_question_add_database',methods:'POST')]
     public function addQuestionsToDatabase(EntityManagerInterface $entityManager,Request $request){
-        
+
         $question = $request->get('addquestion');
         $wronganswer1 = $request->get('wronganswer1');
         $wronganswer2 = $request->get('wronganswer2');
@@ -53,7 +47,7 @@ class AdminController extends AbstractController
 
         $questionObj = new Question();
         $questionObj->setQuestion($question);
-        
+
         foreach($answers as $answer){
             $answerObj = new Answer();
             $answerObj -> setAnswer($answer);
@@ -63,62 +57,65 @@ class AdminController extends AbstractController
         $questionObj->setCorrectanswer($answerObj);
         $answerObj->setQuestion($questionObj);
         $entityManager->persist($questionObj);
-        
+
         $samequestion=$entityManager->getRepository(Question::class)->findBy(['question'=>$question]);
         if ($samequestion) {
             $this->addFlash('error',"Question Already Present");
             return $this->redirectToRoute('app_question');
-        } else { 
+        } else {
             $entityManager->flush();
             $this->addFlash('success',"Question is added successfully");
             return $this->redirectToRoute('app_question');
         }
     }
 
-     /**
-     * @Route("show/question" , name="app_show_question")
+    /**
      * @IsGranted("ROLE_ADMIN")
      */
+
+    #[Route('/show/question',name: 'app_show_question')]
     public function showQuestion(EntityManagerInterface $entityManager){
         $questions=$entityManager->getRepository(Question::class)->findAll();
-       
         $answers=$entityManager->getRepository(Answer::class)->findAll();
-      
+
         return $this->render('exam/showquestion.html.twig',[
             'questions'=>$questions,
             'answers'=>$answers
         ]);
     }
 
-     /**
-     * @Route ("/delete/{id}",name="app_question_delete")
-     */
 
+    #[Route('/delete/{id}',name: 'app_question_delete')]
     public function delete($id,EntityManagerInterface $entityManager){
-        $question=$entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
+
+        $question = $entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
+        $answers = $entityManager->getRepository(Answer::class)->findBy(['question'=>$id]);
         $entityManager->remove($question);
+        $entityManager->flush();
+        foreach($answers as $answer)
+        {
+            $entityManager->remove($answer);
+        }
+
         $entityManager->flush();
         $this->addFlash('success',"Question deleted successfully");
         return $this->redirectToRoute('app_show_question');
     }
 
-  
-     /**
-     * @Route ("/edit/{id}",name="app_question_edit")
-     */
 
+
+    #[Route('/edit/{id}',name: 'app_question_edit')]
     public function edit($id,EntityManagerInterface $entityManager){
-        $question=$entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
-        return $this->render('exam/edit.html.twig',[
-            'question'=>$question
-        ]);
+        $question = $entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
+        $answers = $entityManager->getRepository(Answer::class)->findBy(['question'=>$id]);
 
+        return $this->render('exam/edit.html.twig',[
+            'question'=>$question,
+            'answers'=>$answers
+        ]);
     }
 
-     /**
-     * @Route("new/question/updated/{id}",name="app_question_update_database",methods="POST")
-     */
-
+    #[Route('/new/question/updated/{id}',name: 'app_question_update_database',methods:'POST')]
     public function updateQuestionsToDatabase($id,EntityManagerInterface $entityManager,Request $request){
         $questionname = $request->get('addquestion');
         $wronganswer1 = $request->get('wronganswer1');
@@ -134,11 +131,9 @@ class AdminController extends AbstractController
         $question->setWrong3($wronganswer3);
         $question->setWrong4($wronganswer4);
         $question->setAnswer($correct);
-      
+
         $entityManager->flush();
         $this->addFlash('success',"Question is updated successfully");
         return $this->redirectToRoute('app_show_question');
-        
     }
-
 }

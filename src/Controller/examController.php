@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-
-
 use App\Entity\Question;
+use App\Entity\Answer;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpParser\Node\Stmt\Foreach_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,49 +14,42 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class examController extends AbstractController
 {
-    /**
-     * @Route("/",name="homepage")
-     */
+    #[Route('/',name: 'homepage')]
     public function homepage(){
         return $this->render('front/homepage.html.twig');
     }
 
-
-    /**
-     * @Route("exam/process",name="app_exam_process",methods="POST")
-     */
-
+    #[Route('/exam/process',name: 'app_exam_process', methods:'POST')]
     public function process(Request $request,EntityManagerInterface $entityManager){
-        $question = $entityManager->getRepository(Question::class)->findAll();
+        $questions = $entityManager->getRepository(Question::class)->findAll();
         $score=0;
-
         $answered=$request->get('ques');
-
         foreach ($answered as $answer) {
-            foreach ($question as $questions) {
-                if ($questions->getAnswer() === $answer) {
+            foreach ($questions as $question) {
+                if ($question->getCorrectanswer()->getId() == $answer) {
                     $score++;
                 }
             }
         }
-        $total=count($question);
+        $total=count($questions);
         $questionattempt=count($answered);
         $this->addFlash('success',"Out of ".$total." you have attempted ".$questionattempt." you have scored ".$score);
         return $this->redirectToRoute('newexam');
     }
 
     /**
-     * @Route("/exam" , name="newexam")
      * @IsGranted("ROLE_STUDENT")
      */
 
+    #[Route('/exam',name: 'newexam')]
     public function exam(EntityManagerInterface $entityManager){
 
-        $repository = $entityManager->getRepository(Question::class);
-        $question = $repository->findAll();
+        $questions = $entityManager->getRepository(Question::class)->findAll();
+        $answers=$entityManager->getRepository(Answer::class)->findAll();
 
         return $this->render('exam/newexam.html.twig',[
-            'question' => $question,
+            'questions' => $questions,
+            'answers' => $answers
         ]);
     }
 }
