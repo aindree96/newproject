@@ -20,20 +20,20 @@ class examController extends AbstractController
     }
 
     #[Route('/exam/process',name: 'app_exam_process', methods:'POST')]
-    public function process(Request $request,EntityManagerInterface $entityManager){
-        $questions = $entityManager->getRepository(Question::class)->findAll();
+    public function examProcess(Request $request,EntityManagerInterface $entityManager){
+        $fetchedQuestions = $entityManager->getRepository(Question::class)->findAll();
         $score=0;
-        $answered=$request->get('ques');
-        foreach ($answered as $answer) {
-            foreach ($questions as $question) {
+        $selectedAnswers = $request->get('ques');
+        foreach ($selectedAnswers as $answer) {
+            foreach ($fetchedQuestions as $question) {
                 if ($question->getCorrectanswer()->getId() == $answer) {
                     $score++;
                 }
             }
         }
-        $total=count($questions);
-        $questionattempt=count($answered);
-        $this->addFlash('success',"Out of ".$total." you have attempted ".$questionattempt." you have scored ".$score);
+        $totalQuestions = count($fetchedQuestions);
+        $attemptedQuestions = count($selectedAnswers);
+        $this->addFlash('success',"Out of ".$totalQuestions."questions you have attempted ".$attemptedQuestions." you have scored ".$score);
         return $this->redirectToRoute('newexam');
     }
 

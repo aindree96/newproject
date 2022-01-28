@@ -16,7 +16,7 @@ class Answer
     #[ORM\Column(type: 'string', length: 255)]
     private $answer;
 
-    #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'answers')]
+    #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'answers', cascade: ['persist', 'remove'])]
     private $question;
 
     public function getId(): ?int

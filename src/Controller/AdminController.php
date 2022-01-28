@@ -37,26 +37,26 @@ class AdminController extends AbstractController
     #[Route('new/question/added',name: 'app_question_add_database',methods:'POST')]
     public function addQuestionsToDatabase(EntityManagerInterface $entityManager,Request $request){
 
-        $question = $request->get('addquestion');
-        $wronganswer1 = $request->get('wronganswer1');
-        $wronganswer2 = $request->get('wronganswer2');
-        $wronganswer3 = $request->get('wronganswer3');
-        $correctanswer = $request->get('correctanswer');
+        $question = $request->get('question');
+        $firstWrongAnswer = $request->get('wronganswer1');
+        $secondWrongAnswer = $request->get('wronganswer2');
+        $thirdWrongAnswer = $request->get('wronganswer3');
+        $correctAnswer = $request->get('correctanswer');
 
-        $answers = [ $wronganswer1 , $wronganswer2 , $wronganswer3 , $correctanswer ];
+        $arrayOfFetchedAnswers = [ $firstWrongAnswer , $secondWrongAnswer , $thirdWrongAnswer , $correctAnswer ];
 
-        $questionObj = new Question();
-        $questionObj->setQuestion($question);
+        $questionObject = new Question();
+        $questionObject->setQuestion($question);
 
-        foreach($answers as $answer){
-            $answerObj = new Answer();
-            $answerObj -> setAnswer($answer);
-            $answerObj->setQuestion($questionObj);
-            $entityManager->persist($answerObj);
-        }
-        $questionObj->setCorrectanswer($answerObj);
-        $answerObj->setQuestion($questionObj);
-        $entityManager->persist($questionObj);
+        foreach($arrayOfFetchedAnswers as $answer){
+            $answerObject = new Answer();
+            $answerObject->setAnswer($answer);
+            $answerObject->setQuestion($questionObject);
+            $entityManager->persist($answerObject);
+          }
+
+        $questionObject->setCorrectanswer($answerObject);   
+        $entityManager->persist($questionObject);     
 
         $samequestion=$entityManager->getRepository(Question::class)->findBy(['question'=>$question]);
         if ($samequestion) {
@@ -74,7 +74,7 @@ class AdminController extends AbstractController
      */
 
     #[Route('/show/question',name: 'app_show_question')]
-    public function showQuestion(EntityManagerInterface $entityManager){
+    public function showQuestions(EntityManagerInterface $entityManager){
         $questions=$entityManager->getRepository(Question::class)->findAll();
         $answers=$entityManager->getRepository(Answer::class)->findAll();
 
@@ -82,58 +82,5 @@ class AdminController extends AbstractController
             'questions'=>$questions,
             'answers'=>$answers
         ]);
-    }
-
-
-    #[Route('/delete/{id}',name: 'app_question_delete')]
-    public function delete($id,EntityManagerInterface $entityManager){
-
-        $question = $entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
-        $answers = $entityManager->getRepository(Answer::class)->findBy(['question'=>$id]);
-        $entityManager->remove($question);
-        $entityManager->flush();
-        foreach($answers as $answer)
-        {
-            $entityManager->remove($answer);
-        }
-
-        $entityManager->flush();
-        $this->addFlash('success',"Question deleted successfully");
-        return $this->redirectToRoute('app_show_question');
-    }
-
-
-
-    #[Route('/edit/{id}',name: 'app_question_edit')]
-    public function edit($id,EntityManagerInterface $entityManager){
-        $question = $entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
-        $answers = $entityManager->getRepository(Answer::class)->findBy(['question'=>$id]);
-
-        return $this->render('exam/edit.html.twig',[
-            'question'=>$question,
-            'answers'=>$answers
-        ]);
-    }
-
-    #[Route('/new/question/updated/{id}',name: 'app_question_update_database',methods:'POST')]
-    public function updateQuestionsToDatabase($id,EntityManagerInterface $entityManager,Request $request){
-        $questionname = $request->get('addquestion');
-        $wronganswer1 = $request->get('wronganswer1');
-        $wronganswer2 = $request->get('wronganswer2');
-        $wronganswer3 = $request->get('wronganswer3');
-        $wronganswer4 = $request->get('wronganswer4');
-        $correct = $request->get('correctanswer');
-
-        $question=$entityManager->getRepository(Question::class)->findOneBy(['id'=>$id]);
-        $question->setQuestion($questionname);
-        $question->setWrong1($wronganswer1);
-        $question->setWrong2($wronganswer2);
-        $question->setWrong3($wronganswer3);
-        $question->setWrong4($wronganswer4);
-        $question->setAnswer($correct);
-
-        $entityManager->flush();
-        $this->addFlash('success',"Question is updated successfully");
-        return $this->redirectToRoute('app_show_question');
     }
 }

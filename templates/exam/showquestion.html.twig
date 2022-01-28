@@ -12,11 +12,10 @@
          <tr>
              <th>QuestionId</th>
              <th>Question</th>
-             <th>Wrong Answer 1</th>
-             <th>Wrong Answer 2</th>
-             <th>Wrong Answer 3</th>
-             <th>Correct_Answer</th>
-             <th>Action</th>
+             <th>First Wrong Answer</th>
+             <th>Second Wrong Answer</th>
+             <th>Third Wrong Answer</th>
+             <th>Correct Answer</th>
          </tr>
          </thead>
          {% if questions is empty %}
@@ -29,12 +28,10 @@
                      <td>{{question.id}}</td>
                      <td>{{question.question}}</td>
                      {% for answer in answers %}
-                         {% if question.id == answer.question.id %}
-                             <td>{{ answer.answer }}</td>
-                         {% endif %}
-                     {% endfor %}
-                     <td><a href="{{ path('app_question_edit',{id:question.id}) }}">Edit/</a>
-                         <a href="{{ path('app_question_delete',{id:question.id}) }}">Delete</a> </td>
+                     {% if question.id == answer.question.id %}
+                     <td>{{ answer.answer }}</td>
+                     {% endif %}
+                     {% endfor %}   
                  </tr>
              {% endfor %}
          {% endif %}
