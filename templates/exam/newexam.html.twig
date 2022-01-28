@@ -5,6 +5,9 @@
         <div class="row col-12 justify-content-center">
             <h1 >Exam</h1>
         </div>
+          {% if questions is empty %}            
+                 <div class="d-inline p-2 bg-dark text-white justify-content-center">No questions added ... give exams later !!</div>
+         {% else %}
         <form action="{{ path('exam_process') }}" method="post">
             {% for question in questions %}
                 <div class="row col-12 ">
@@ -28,5 +31,6 @@
                 </div>
             {% endfor %}
         </form>
+        {% endif %}
     </div>
 {% endblock %}
