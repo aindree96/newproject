@@ -76,11 +76,8 @@ class AdminController extends AbstractController
     #[Route('/show-questions',name: 'show_questions')]
     public function showQuestions(EntityManagerInterface $entityManager){
         $questions=$entityManager->getRepository(Question::class)->findAll();
-        $answers=$entityManager->getRepository(Answer::class)->findAll();
-
         return $this->render('exam/showquestion.html.twig',[
-            'questions'=>$questions,
-            'answers'=>$answers
+            'questions'=>$questions          
         ]);
     }
 }

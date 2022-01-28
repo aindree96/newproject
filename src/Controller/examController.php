@@ -45,11 +45,8 @@ class examController extends AbstractController
     public function exam(EntityManagerInterface $entityManager){
 
         $questions = $entityManager->getRepository(Question::class)->findAll();
-        $answers=$entityManager->getRepository(Answer::class)->findAll();
-
         return $this->render('exam/newexam.html.twig',[
-            'questions' => $questions,
-            'answers' => $answers
+            'questions' => $questions            
         ]);
     }
 }

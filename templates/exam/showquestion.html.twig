@@ -27,10 +27,8 @@
                  <tr>
                      <td>{{question.id}}</td>
                      <td>{{question.question}}</td>
-                     {% for answer in answers %}
-                     {% if question.id == answer.question.id %}
-                     <td>{{ answer.answer }}</td>
-                     {% endif %}
+                     {% for answer in question.answers %}              
+                     <td>{{ answer.answer }}</td>               
                      {% endfor %}   
                  </tr>
              {% endfor %}

@@ -14,10 +14,8 @@
                     <ul class="list-unstyled">
                         <li>{{ question.id }}.<b>{{ question.question }}</b></li>
                          <ul class="list-unstyled">
-                         {% for answer in answers %}
-                         {% if question.id == answer.question.id %}
-                            <li><input type="radio" name="ques[{{ question.id }}]" value="{{ answer.id }}">{{ answer.answer }}</li>
-                        {% endif %}
+                         {% for answer in question.answers %}               
+                            <li><input type="radio" name="ques[{{ question.id }}]" value="{{ answer.id }}">{{ answer.answer }}</li>                   
                         {% endfor %}                            
                         </ul>
                     </ul>
