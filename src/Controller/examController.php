@@ -19,7 +19,7 @@ class examController extends AbstractController
         return $this->render('front/homepage.html.twig');
     }
 
-    #[Route('/exam/process',name: 'app_exam_process', methods:'POST')]
+    #[Route('/exam-process',name: 'exam_process', methods:'POST')]
     public function examProcess(Request $request,EntityManagerInterface $entityManager){
         $fetchedQuestions = $entityManager->getRepository(Question::class)->findAll();
         $score=0;
@@ -34,14 +34,14 @@ class examController extends AbstractController
         $totalQuestions = count($fetchedQuestions);
         $attemptedQuestions = count($selectedAnswers);
         $this->addFlash('success',"Out of ".$totalQuestions."questions you have attempted ".$attemptedQuestions." you have scored ".$score);
-        return $this->redirectToRoute('newexam');
+        return $this->redirectToRoute('exam');
     }
 
     /**
      * @IsGranted("ROLE_STUDENT")
      */
 
-    #[Route('/exam',name: 'newexam')]
+    #[Route('/exam',name: 'exam')]
     public function exam(EntityManagerInterface $entityManager){
 
         $questions = $entityManager->getRepository(Question::class)->findAll();

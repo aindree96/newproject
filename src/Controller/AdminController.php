@@ -29,12 +29,12 @@ class AdminController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
 
-    #[Route('/new/question',name: 'app_question')]
+    #[Route('/add-question',name: 'add_question')]
     public function addQuestion(){
         return $this->render('exam/addquestion.html.twig');
     }
 
-    #[Route('new/question/added',name: 'app_question_add_database',methods:'POST')]
+    #[Route('insert-questions',name: 'insert_questions',methods:'POST')]
     public function addQuestionsToDatabase(EntityManagerInterface $entityManager,Request $request){
 
         $question = $request->get('question');
@@ -61,11 +61,11 @@ class AdminController extends AbstractController
         $samequestion=$entityManager->getRepository(Question::class)->findBy(['question'=>$question]);
         if ($samequestion) {
             $this->addFlash('error',"Question Already Present");
-            return $this->redirectToRoute('app_question');
+            return $this->redirectToRoute('add_question');
         } else {
             $entityManager->flush();
             $this->addFlash('success',"Question is added successfully");
-            return $this->redirectToRoute('app_question');
+            return $this->redirectToRoute('add_question');
         }
     }
 
@@ -73,7 +73,7 @@ class AdminController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      */
 
-    #[Route('/show/question',name: 'app_show_question')]
+    #[Route('/show-questions',name: 'show_questions')]
     public function showQuestions(EntityManagerInterface $entityManager){
         $questions=$entityManager->getRepository(Question::class)->findAll();
         $answers=$entityManager->getRepository(Answer::class)->findAll();
