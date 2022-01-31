@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-class examController extends AbstractController
+class ExamController extends AbstractController
 {
     #[Route('/',name: 'homepage')]
     public function homepage(){
@@ -20,7 +20,8 @@ class examController extends AbstractController
     }
 
     #[Route('/exam-process',name: 'exam_process', methods:'POST')]
-    public function examProcess(Request $request,EntityManagerInterface $entityManager){
+    public function examProcess(Request $request,EntityManagerInterface $entityManager)
+    {
         $fetchedQuestions = $entityManager->getRepository(Question::class)->findAll();
         $score=0;
         $selectedAnswers = $request->get('ques');
@@ -37,12 +38,10 @@ class examController extends AbstractController
         return $this->redirectToRoute('exam');
     }
 
-    /**
-     * @IsGranted("ROLE_STUDENT")
-     */
-
     #[Route('/exam',name: 'exam')]
-    public function exam(EntityManagerInterface $entityManager){
+    #[IsGranted("ROLE_STUDENT")]
+    public function exam(EntityManagerInterface $entityManager)
+    {
 
         $questions = $entityManager->getRepository(Question::class)->findAll();
         return $this->render('exam/newexam.html.twig',[
